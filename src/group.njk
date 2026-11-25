@@ -81,7 +81,7 @@ eleventyComputed:
         {{ avatar(group.lead) }}
         <span><b>{{ group.lead.name }}</b><span>{{ group.lead.position }}</span></span>
       </a>
-      {% if group.lead.email %}<a href="mailto:{{ group.lead.email }}">{{ group.lead.email }}</a>{% endif %}
+      {% if group.lead.email %}<a href="mailto:{{ group.lead.email }}">{{ group.lead.email | breakable | safe }}</a>{% endif %}
     </div>
     {% endif %}
 
@@ -96,7 +96,7 @@ eleventyComputed:
     <dl class="facts">
       <div><dt>Department</dt><dd>{{ group.department }}</dd></div>
       {% if group.location %}<div><dt>Based at</dt><dd>{{ group.location }}</dd></div>{% endif %}
-      {% if group.email %}<div><dt>Group email</dt><dd><a href="mailto:{{ group.email }}">{{ group.email }}</a></dd></div>{% endif %}
+      {% if group.email %}<div><dt>Group email</dt><dd><a href="mailto:{{ group.email }}">{{ group.email | breakable | safe }}</a></dd></div>{% endif %}
       {% if group.code_url %}<div><dt>Code</dt><dd><a href="{{ group.code_url }}">{{ group.code_url | replace("https://", "") }}</a></dd></div>{% endif %}
     </dl>
   </aside>

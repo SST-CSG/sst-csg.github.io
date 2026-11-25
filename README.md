@@ -26,6 +26,18 @@ content/groups/fluid-mechanics-group/
 
 A person's `role` decides where they appear on the group's People page: `Group leader`, `Researcher`, `PhD student`, `Visiting researcher` or `Alumni`. A post with `share_with_school: true` also appears in the School's news.
 
+## Adding and editing content
+
+Until the editor is connected, content is changed by editing files, either on github.com (open a file, press the pencil, then "Commit changes") or by asking Claude. Every change to `main` is published about a minute later.
+
+- **Add a research group:** create `content/groups/<group-name>/group.md` from `content/_templates/group.md`.
+- **Add a person:** create `content/groups/<group-name>/people/<firstname-lastname>.md` from `content/_templates/person.md`.
+- **Edit a group or a profile:** edit its file.
+- **Add or edit a department:** edit the `departments` list in `src/_data/site.json`. A group's `department` must match one of these names exactly.
+- **Remove something:** delete its file.
+
+Folder and file names become web addresses, so use lowercase letters and hyphens.
+
 ## Working on the site
 
 You need Node.js 22 or later.

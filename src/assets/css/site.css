@@ -23,6 +23,9 @@ a { color: var(--link); }
 a:hover { color: var(--link-hover); }
 a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
 img { max-width: 100%; }
+/* Email addresses and web addresses can be long: let them break onto a new line. */
+a[href^="mailto:"], .facts dd a, .box a { overflow-wrap: anywhere; }
+.leader > span, .box > * { min-width: 0; }
 h1, h2, h3 { font-family: var(--heading); }
 [hidden] { display: none !important; }
 

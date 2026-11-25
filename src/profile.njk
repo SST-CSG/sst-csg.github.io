@@ -24,7 +24,7 @@ eleventyComputed:
     <div class="profile__side">
       {{ avatar(person) }}
       <dl class="facts">
-        {% if person.email %}<div><dt>Email</dt><dd><a href="mailto:{{ person.email }}">{{ person.email }}</a></dd></div>{% endif %}
+        {% if person.email %}<div><dt>Email</dt><dd><a href="mailto:{{ person.email }}">{{ person.email | breakable | safe }}</a></dd></div>{% endif %}
         {% if person.office %}<div><dt>Office</dt><dd>{{ person.office }}</dd></div>{% endif %}
         {% if person.since %}<div><dt>In the group since</dt><dd>{{ person.since }}</dd></div>{% endif %}
         <div><dt>Department</dt><dd>{{ group.department }}</dd></div>

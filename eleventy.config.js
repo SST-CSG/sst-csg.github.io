@@ -37,6 +37,12 @@ export default function (eleventyConfig) {
     for (const ch of String(seed)) n = (n * 31 + ch.charCodeAt(0)) % 9973;
     return Array.from({ length: count }, (_, i) => (i * 7 + n) % 5 === 0);
   });
+  // Lets a long email address break after the @ when space is tight.
+  eleventyConfig.addFilter("breakable", (value) =>
+    String(value)
+      .replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
+      .replace("@", "@<wbr>")
+  );
   eleventyConfig.addFilter("pattern", (rows) => rows.join("").split("").map((c) => c === "1"));
 
   return {

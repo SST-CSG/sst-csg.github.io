@@ -28,7 +28,7 @@
     <div>
       <h2>Find us</h2>
       <p>{% for line in site.address %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
-      {% if site.contactEmail %}<p style="margin-top: 12px"><a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a></p>{% endif %}
+      {% if site.contactEmail %}<p style="margin-top: 12px"><a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail | breakable | safe }}</a></p>{% endif %}
     </div>
   </div>
   <div class="wrap footer-base">
