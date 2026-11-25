@@ -1,0 +1,68 @@
+---
+layout: layouts/base.njk
+nav: groups
+tab: overview
+pagination:
+  data: school.posts
+  size: 1
+  alias: post
+permalink: "{{ post.url }}"
+eleventyComputed:
+  title: "{{ post.title }}"
+  description: "{{ post.summary }}"
+---
+{% from "macros.njk" import avatar %}
+{% set group = post.group %}
+{% include "group-banner.njk" %}
+<main id="main" class="wrap page split">
+  <article class="post">
+    {% if post.kind %}<span class="tag tag--on">{{ post.kind }}</span>{% endif %}
+    <h1 class="post__title">{{ post.title }}</h1>
+    <div class="byline">
+      {% if post.author %}{{ avatar({ initials: post.author.initials }) }}{% endif %}
+      <span>
+        {% if post.author %}<a href="{{ post.author.url }}">{{ post.author.name }}</a>{% endif %}
+        <span class="small muted">{{ post.date | longDate }} · {{ post.readMinutes }} minute read</span>
+      </span>
+    </div>
+
+    <div class="prose prose--post">{{ post.html | safe }}</div>
+
+    {% if post.tags and post.tags.length %}
+    <div class="post__tags">
+      <span class="small muted" style="padding-right: 8px">Tags</span>
+      {% for t in post.tags %}<span class="pill">{{ t }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </article>
+
+  <aside class="split__side stack stack--sm" style="gap: 32px">
+    {% if post.project %}
+    <div class="box project-box" style="gap: 14px">
+      <h2>Part of the project</h2>
+      <a class="title" href="{{ group.url }}#projects">{{ post.project.title }}</a>
+      <dl>
+        {% if post.project.status %}<dt>Status</dt><dd>{{ post.project.status }}</dd>{% endif %}
+        {% if post.project.dates %}<dt>Dates</dt><dd>{{ post.project.dates }}</dd>{% endif %}
+        {% if post.project.funder %}<dt>Funder</dt><dd>{{ post.project.funder }}</dd>{% endif %}
+      </dl>
+      {% if post.project.team.length %}
+      <div class="mini-team">
+        {% for m in post.project.team %}<a class="avatar{% if m.lead %} avatar--lead{% endif %}" href="{{ m.url }}" aria-label="{{ m.name }}">{{ m.initials }}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if post.more.length %}
+    <section aria-labelledby="more-h">
+      <h2 class="side-title" id="more-h">More from the group</h2>
+      <ul class="plain-list rows rows--tight">
+        {% for p in post.more %}
+        <li class="titled-row"><a href="{{ p.url }}">{{ p.title }}</a><span class="small muted" style="font-size: 14px">{{ p.date | longDate }}</span></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </aside>
+</main>

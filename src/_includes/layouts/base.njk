@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} | {% endif %}{{ site.name }}</title>
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+{% if site.preview %}<meta name="robots" content="noindex">{% endif %}
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% if site.preview %}<div class="preview-note">Preview site. Content is still being added.</div>{% endif %}
+{% include "header.njk" %}
+{{ content | safe }}
+{% include "footer.njk" %}
+{% if script %}<script src="/assets/js/{{ script }}" defer></script>{% endif %}
+</body>
+</html>

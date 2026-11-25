@@ -1,0 +1,82 @@
+---
+layout: layouts/base.njk
+nav: groups
+tab: people
+pagination:
+  data: school.people
+  size: 1
+  alias: person
+permalink: "{{ person.url }}"
+eleventyComputed:
+  title: "{{ person.displayName }}"
+  description: "{{ person.position }}, {{ person.group.name }}"
+---
+{% from "macros.njk" import avatar %}
+{% set group = person.group %}
+{% include "group-banner.njk" %}
+<main id="main" class="wrap page" style="padding-top: 40px">
+  <a class="back" href="{{ group.peopleUrl }}">
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M15 5l-7 7 7 7"></path></svg>
+    All people in the group
+  </a>
+
+  <div class="profile">
+    <div class="profile__side">
+      {{ avatar(person) }}
+      <dl class="facts">
+        {% if person.email %}<div><dt>Email</dt><dd><a href="mailto:{{ person.email }}">{{ person.email }}</a></dd></div>{% endif %}
+        {% if person.office %}<div><dt>Office</dt><dd>{{ person.office }}</dd></div>{% endif %}
+        {% if person.since %}<div><dt>In the group since</dt><dd>{{ person.since }}</dd></div>{% endif %}
+        <div><dt>Department</dt><dd>{{ group.department }}</dd></div>
+      </dl>
+      {% if person.links.length %}
+      <ul class="plain-list link-buttons">
+        {% for l in person.links %}<li><a href="{{ l.href }}" rel="me noopener">{{ l.label }}</a></li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="profile__main">
+      <div>
+        <h1 class="profile__name">{{ person.displayName }}</h1>
+        <p class="profile__role">{{ person.position }}, {{ group.name }}</p>
+      </div>
+
+      {% if person.body %}
+      <section aria-labelledby="bio-h">
+        <h2 id="bio-h">About</h2>
+        <div class="prose">{{ person.html | safe }}</div>
+      </section>
+      {% endif %}
+
+      {% if person.interests and person.interests.length %}
+      <section aria-labelledby="int-h">
+        <h2 id="int-h">Research interests</h2>
+        <ul class="plain-list pills">
+          {% for t in person.interests %}<li class="pill">{{ t }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if person.projects.length %}
+      <section aria-labelledby="proj-h">
+        <h2 id="proj-h">Projects</h2>
+        <ul class="plain-list rows rows--tight">
+          {% for p in person.projects %}
+          <li>{% if p.url %}<a href="{{ p.url }}" style="font-weight: 600">{{ p.title }}</a>{% else %}<b style="font-weight: 600">{{ p.title }}</b>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if person.publications and person.publications.length %}
+      <section aria-labelledby="pub-h">
+        <h2 id="pub-h">Selected publications</h2>
+        <ol class="publications">
+          {% for p in person.publications %}<li>{{ p }}</li>{% endfor %}
+        </ol>
+      </section>
+      {% endif %}
+    </div>
+  </div>
+</main>

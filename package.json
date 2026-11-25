@@ -1,0 +1,17 @@
+{
+  "name": "sst-csg-site",
+  "private": true,
+  "type": "module",
+  "description": "Research site of the School of Science & Technology, City St George's, University of London",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@fontsource/fira-sans": "^5.0.0",
+    "@fontsource/ibm-plex-sans": "^5.0.0",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.0.0"
+  }
+}

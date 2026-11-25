@@ -1,0 +1,31 @@
+<header class="site-header">
+  <div class="topbar">
+    <div class="wrap">
+      <a href="{{ site.universityUrl }}">{{ site.university }}</a>
+      {% if site.editorUrl %}
+      <a class="underlined" href="{{ site.editorUrl }}">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><rect x="5" y="11" width="14" height="10"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+        Sign in to edit
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="wrap masthead">
+    <a class="brand" href="/">
+      {% if logos.responsive %}
+      <img src="/assets/logos/logo-responsive.svg" alt="{{ site.university }}" width="120" height="83">
+      {% else %}
+      <span class="brand__university">{{ site.university }}</span>
+      {% endif %}
+      <span class="brand__rule" aria-hidden="true"></span>
+      <span class="brand__school">School of Science<br>&amp; Technology</span>
+    </a>
+    <nav class="main-nav" aria-label="Main">
+      <ul class="plain-list">
+        <li><a href="/groups/"{% if nav == "groups" %} aria-current="page"{% endif %}>Research groups</a></li>
+        <li><a href="/people/"{% if nav == "people" %} aria-current="page"{% endif %}>People</a></li>
+        <li><a href="/news/"{% if nav == "news" %} aria-current="page"{% endif %}>News and events</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

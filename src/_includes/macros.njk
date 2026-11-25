@@ -1,0 +1,18 @@
+{# Small pieces shared by several pages. #}
+
+{# A person's picture. Until photos are added it shows their initials. #}
+{% macro avatar(person) %}<span class="avatar{% if person.lead %} avatar--lead{% endif %}" aria-hidden="true">{{ person.initials }}</span>{% endmacro %}
+
+{# A decorative block of squares. `cells` is a list of true/false values. #}
+{% macro squares(cells) %}<div class="squares" aria-hidden="true">{% for on in cells %}<span{% if on %} class="on"{% endif %}></span>{% endfor %}</div>{% endmacro %}
+
+{# One event in a list of events. #}
+{% macro event(e) %}
+<li class="event">
+  <span class="event__date"><b>{{ e.date | day }}</b><span>{{ e.date | month }}</span></span>
+  <span class="event__text">
+    <b>{{ e.title }}</b>
+    <span class="small muted">{{ e.location }}{% if e.time %} · {{ e.time }}{% endif %}</span>
+  </span>
+</li>
+{% endmacro %}

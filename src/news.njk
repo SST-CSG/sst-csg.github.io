@@ -1,0 +1,63 @@
+---
+layout: layouts/base.njk
+title: News and events
+nav: news
+permalink: /news/
+script: directory.js
+description: News and events from across the School of Science & Technology.
+---
+{% from "macros.njk" import squares, event %}
+{% set feature = school.news[0] %}
+<main id="main" class="wrap page">
+  <h1 class="page-title">News and events</h1>
+  <p class="lead">Stories from across the School. Posts that a group marks as “share with the School” appear here as well as on the group's own page.</p>
+
+  {% if feature %}
+  <article class="feature">
+    {{ squares(["00110000", "01110000", "01001000", "01101000", "01100000"] | pattern) }}
+    <div class="feature__text">
+      <span class="eyebrow">Featured · {{ feature.source }}</span>
+      <h2><a href="{{ feature.url }}">{{ feature.title }}</a></h2>
+      <p>{{ feature.summary }}</p>
+      <span class="date">{{ feature.date | longDate }}</span>
+    </div>
+  </article>
+  {% endif %}
+
+  <div class="split">
+    <section class="split__main" aria-labelledby="news-h" data-directory>
+      <div class="section-head" style="align-items: center; margin-bottom: 24px">
+        <h2 class="section-title section-title--md" id="news-h">Latest news</h2>
+        <div class="chips" style="flex: 0 1 auto" role="group" aria-label="Filter news"{% if not school.news.length %} hidden{% endif %}>
+          <button type="button" class="chip" data-filter="kind" value="All" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-filter="kind" value="School" aria-pressed="false">School news</button>
+          <button type="button" class="chip" data-filter="kind" value="Group" aria-pressed="false">Group news</button>
+        </div>
+      </div>
+      {% if not school.news.length %}<p class="muted">No news has been posted yet.</p>{% endif %}
+      <ul class="plain-list rows"{% if not school.news.length %} hidden{% endif %}>
+        {% for n in school.news %}
+        <li class="news-row" data-item data-kind="{{ n.kind }}" data-text="{{ n.title }}">
+          <span class="news-row__date">{{ n.date | longDate }}</span>
+          <span class="news-row__text">
+            <span class="news-row__source">{{ n.source }}</span>
+            <a class="news-row__title" href="{{ n.url }}">{{ n.title }}</a>
+            <span class="news-row__summary">{{ n.summary }}</span>
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <aside class="split__side" aria-labelledby="events-h">
+      <h2 class="section-title section-title--md" id="events-h" style="margin-bottom: 24px; line-height: 44px">Upcoming events</h2>
+      {% if school.events.length %}
+      <ul class="plain-list rows">
+        {% for e in school.events %}{{ event(e) }}{% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted">No events are planned at the moment.</p>
+      {% endif %}
+    </aside>
+  </div>
+</main>

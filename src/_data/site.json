@@ -1,0 +1,19 @@
+{
+  "name": "School of Science & Technology",
+  "university": "City St George's, University of London",
+  "universityUrl": "https://www.citystgeorges.ac.uk",
+  "universityPrivacyUrl": "",
+  "address": [
+    "Northampton Square",
+    "London EC1V 0HB"
+  ],
+  "contactEmail": "",
+  "editorUrl": "",
+  "preview": true,
+  "departments": [
+    {
+      "name": "Engineering",
+      "text": "Research groups in the Department of Engineering."
+    }
+  ]
+}

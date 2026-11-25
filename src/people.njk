@@ -1,0 +1,56 @@
+---
+layout: layouts/base.njk
+title: People
+nav: people
+permalink: /people/
+script: directory.js
+description: Researchers, group leaders and PhD students in the School of Science & Technology.
+---
+{% from "macros.njk" import avatar %}
+<main id="main" class="wrap page" data-directory>
+  <h1 class="page-title">People</h1>
+  <p class="lead">Everyone listed in a research group appears here automatically. Each person keeps their own profile up to date.</p>
+
+  <div class="filters">
+    <div class="field field--wide">
+      <label for="people-search">Search by name, group or topic</label>
+      <input id="people-search" type="search" data-search>
+    </div>
+    <div class="field">
+      <label for="people-dept">Department</label>
+      <select id="people-dept" data-filter="department">
+        <option value="All">All departments</option>
+        {% for d in school.departments %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="people-role">Role</label>
+      <select id="people-role" data-filter="role">
+        <option value="All">All roles</option>
+        {% for r in school.roles %}<option value="{{ r.value }}">{{ r.label }}</option>{% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <p class="count" aria-live="polite" data-count="%n %s" data-one="person" data-many="people">{{ school.people.length }} people</p>
+
+  <ul class="plain-list people-grid">
+    {% for p in school.people %}
+    <li data-item data-department="{{ p.group.department }}" data-role="{{ p.role }}" data-text="{{ p.displayName }} {{ p.group.name }} {{ p.position }} {{ p.topic }}">
+      <a class="person-row" href="{{ p.url }}">
+        {{ avatar(p) }}
+        <span class="person-row__text">
+          <b>{{ p.displayName }}</b>
+          <span>{{ p.position }}</span>
+          <span class="group">{{ p.group.name }}</span>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <div class="empty" data-empty hidden>
+    <p>Nobody matches those filters.</p>
+    <p class="muted">Try a shorter search, or set both filters back to “All”.</p>
+  </div>
+</main>

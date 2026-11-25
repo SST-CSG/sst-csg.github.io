@@ -1,0 +1,24 @@
+---
+layout: layouts/base.njk
+nav: news
+pagination:
+  data: school.schoolNews
+  size: 1
+  alias: item
+permalink: "{{ item.url }}"
+eleventyComputed:
+  title: "{{ item.title }}"
+  description: "{{ item.summary }}"
+---
+<main id="main" class="wrap page">
+  <a class="back" href="/news/">
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M15 5l-7 7 7 7"></path></svg>
+    All news and events
+  </a>
+  <article class="post">
+    <span class="tag tag--on">School news</span>
+    <h1 class="post__title">{{ item.title }}</h1>
+    <p class="small muted" style="margin: 0; padding-bottom: 24px; border-bottom: 1px solid var(--grey-line)">{{ item.date | longDate }} · {{ item.readMinutes }} minute read</p>
+    <div class="prose prose--post">{{ item.html | safe }}</div>
+  </article>
+</main>

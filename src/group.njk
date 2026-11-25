@@ -1,0 +1,103 @@
+---
+layout: layouts/base.njk
+nav: groups
+tab: overview
+bannerIsTitle: true
+pagination:
+  data: school.groups
+  size: 1
+  alias: group
+permalink: "{{ group.url }}"
+eleventyComputed:
+  title: "{{ group.name }}"
+  description: "{{ group.summary }}"
+---
+{% from "macros.njk" import avatar %}
+{% include "group-banner.njk" %}
+<main id="main" class="wrap page split">
+  <div class="split__main stack">
+    <section class="prose prose--intro" aria-labelledby="about-h">
+      <h2 class="section-title section-title--md" id="about-h" style="margin-bottom: 16px">About the group</h2>
+      {{ group.html | safe }}
+    </section>
+
+    {% if group.projects.length %}
+    <section id="projects" aria-labelledby="projects-h">
+      <h2 class="section-title section-title--md" id="projects-h" style="margin-bottom: 24px">Current projects</h2>
+      <div class="card-grid">
+        {% for p in group.projects %}
+        <{% if p.url %}a href="{{ p.url }}"{% else %}div{% endif %} class="card card--line project">
+          <span class="tag{% if p.active %} tag--on{% endif %}">{{ p.status }}</span>
+          <span class="card__title">{{ p.title }}</span>
+          <span class="card__text">{{ p.summary }}</span>
+          <span class="meta">{{ [p.funder, p.dates] | reject("falsy") | join(" · ") }}</span>
+        </{% if p.url %}a{% else %}div{% endif %}>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if group.posts.length %}
+    <section aria-labelledby="posts-h">
+      <h2 class="section-title section-title--md" id="posts-h" style="margin-bottom: 24px">Latest posts</h2>
+      <ul class="plain-list rows">
+        {% for n in group.posts.slice(0, 6) %}
+        <li class="news-row">
+          <span class="news-row__date">{{ n.date | longDate }}</span>
+          <span class="news-row__text" style="gap: 4px">
+            <a class="news-row__title news-row__title--sm" href="{{ n.url }}">{{ n.title }}</a>
+            <span class="small muted">{{ n.kind }}</span>
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section aria-labelledby="team-h">
+      <div class="section-head" style="margin-bottom: 24px">
+        <h2 class="section-title section-title--md" id="team-h">The team</h2>
+        <a href="{{ group.peopleUrl }}">Everyone in the group</a>
+      </div>
+      <ul class="plain-list team-grid">
+        {% for m in group.team.slice(0, 6) %}
+        <li>
+          <a class="team-card" href="{{ m.url }}">
+            {{ avatar(m) }}
+            <b>{{ m.name }}</b>
+            <span>{{ m.position }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <aside class="split__side stack stack--sm">
+    {% if group.lead %}
+    <div class="box">
+      <h2>Group leader</h2>
+      <a class="leader" href="{{ group.lead.url }}">
+        {{ avatar(group.lead) }}
+        <span><b>{{ group.lead.name }}</b><span>{{ group.lead.position }}</span></span>
+      </a>
+      {% if group.lead.email %}<a href="mailto:{{ group.lead.email }}">{{ group.lead.email }}</a>{% endif %}
+    </div>
+    {% endif %}
+
+    {% if group.email %}
+    <div class="box box--grey">
+      <h2>Work with us</h2>
+      <p>Interested in a PhD place or a research collaboration? Get in touch and tell us about your ideas.</p>
+      <a class="button button--sm" style="align-self: start" href="mailto:{{ group.email }}">Contact the group</a>
+    </div>
+    {% endif %}
+
+    <dl class="facts">
+      <div><dt>Department</dt><dd>{{ group.department }}</dd></div>
+      {% if group.location %}<div><dt>Based at</dt><dd>{{ group.location }}</dd></div>{% endif %}
+      {% if group.email %}<div><dt>Group email</dt><dd><a href="mailto:{{ group.email }}">{{ group.email }}</a></dd></div>{% endif %}
+      {% if group.code_url %}<div><dt>Code</dt><dd><a href="{{ group.code_url }}">{{ group.code_url | replace("https://", "") }}</a></dd></div>{% endif %}
+    </dl>
+  </aside>
+</main>

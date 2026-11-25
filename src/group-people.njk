@@ -1,0 +1,45 @@
+---
+layout: layouts/base.njk
+nav: groups
+tab: people
+bannerIsTitle: true
+pagination:
+  data: school.groups
+  size: 1
+  alias: group
+permalink: "{{ group.peopleUrl }}"
+eleventyComputed:
+  title: "People: {{ group.name }}"
+---
+{% from "macros.njk" import avatar %}
+{% include "group-banner.njk" %}
+<main id="main" class="wrap page stack">
+  {% for s in group.sections %}
+  <section class="people-section">
+    <h2>{{ s.title }}</h2>
+    <ul class="plain-list member-grid">
+      {% for p in s.people %}
+      <li>
+        <a class="member" href="{{ p.url }}">
+          {{ avatar(p) }}
+          <b>{{ p.displayName }}</b>
+          <span>{{ p.position }}</span>
+          {% if p.topic %}<span class="muted">{{ p.topic }}</span>{% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+
+  {% if group.alumni.length %}
+  <section class="people-section" aria-labelledby="alumni-h">
+    <h2 id="alumni-h">Alumni</h2>
+    <ul class="plain-list alumni-grid">
+      {% for a in group.alumni %}
+      <li><b>{{ a.displayName }}</b><span class="small muted">{{ a.alumni_note }}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</main>

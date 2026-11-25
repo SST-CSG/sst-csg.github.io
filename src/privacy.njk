@@ -1,0 +1,27 @@
+---
+layout: layouts/base.njk
+title: Privacy notice
+permalink: /privacy/
+description: What this site publishes about people, why, and how to ask for a change or removal.
+---
+<main id="main" class="wrap page">
+  <h1 class="page-title">Privacy notice</h1>
+  <div class="prose" style="max-width: 760px">
+    <p class="lead" style="margin-bottom: 24px">This site showcases the research of the School of Science &amp; Technology at {{ site.university }}. This page explains what it publishes about people and how it handles personal data.</p>
+
+    <h2>This site does not use cookies or tracking</h2>
+    <p>The public site sets no cookies and uses no analytics. Fonts and images are served from the site itself. The site is hosted on GitHub Pages, which logs visitors' IP addresses for security.</p>
+
+    <h2>What we publish about people</h2>
+    <p>Profiles show work details only: name, role, research interests, university email address and links to professional pages such as ORCID or Google Scholar. Each person agrees to their profile, including any photo, before it is published.</p>
+
+    <h2>Who edits the site</h2>
+    <p>Each research group keeps its own pages up to date. People edit the site by signing in with their own GitHub account. The editing tool stores the GitHub account name and email address of each person who signs in, and uses them only for signing in. A record of who changed what is kept privately so that mistakes can be undone.</p>
+
+    <h2>Asking for a change or removal</h2>
+    <p>If you appear on this site, you can ask for your profile to be changed or taken down at any time. Contact your group leader{% if site.contactEmail %} or email <a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a>{% else %} or the School office{% endif %}, and it will be dealt with promptly.</p>
+
+    <h2>The university's privacy notice</h2>
+    <p>{{ site.university }} is responsible for this site. {% if site.universityPrivacyUrl %}Its <a href="{{ site.universityPrivacyUrl }}">privacy notice</a> explains your rights and how to contact the data protection officer.{% else %}Its privacy notice, on the <a href="{{ site.universityUrl }}">university website</a>, explains your rights and how to contact the data protection officer.{% endif %}</p>
+  </div>
+</main>

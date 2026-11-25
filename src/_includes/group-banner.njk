@@ -1,0 +1,26 @@
+{# The green banner at the top of every page in a group's space.
+   Needs `group`. Set `tab` to "overview" or "people". Set `bannerIsTitle` on
+   pages where the group name is the page's main heading. #}
+{% from "macros.njk" import squares %}
+<div class="group-banner">
+  <div class="wrap group-banner__top">
+    <div class="group-banner__text">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><a href="/groups/">Research groups</a><span aria-hidden="true">/</span>
+        {%- if bannerIsTitle and tab == "overview" %}<span aria-current="page">{{ group.name }}</span>{% else %}<a href="{{ group.url }}">{{ group.name }}</a>{% endif %}
+      </nav>
+      <p class="eyebrow">Department of {{ group.department }}</p>
+      {% if bannerIsTitle %}<h1 class="group-banner__name">{{ group.name }}</h1>{% else %}<p class="group-banner__name">{{ group.name }}</p>{% endif %}
+      <p class="group-banner__summary">{{ group.summary }}</p>
+    </div>
+    {{ squares(["00011", "00110", "01101", "11011"] | pattern) }}
+  </div>
+  <div class="tabs">
+    <nav class="wrap" aria-label="Group sections">
+      <ul class="plain-list">
+        <li><a href="{{ group.url }}"{% if tab == "overview" and bannerIsTitle %} aria-current="page"{% endif %}>Overview</a></li>
+        <li><a href="{{ group.peopleUrl }}"{% if tab == "people" and bannerIsTitle %} aria-current="page"{% endif %}>People</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>

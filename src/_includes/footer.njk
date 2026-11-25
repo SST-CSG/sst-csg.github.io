@@ -1,0 +1,44 @@
+{% from "macros.njk" import squares %}
+<footer class="site-footer">
+  {{ squares(["110100111001001100011010"] | pattern) }}
+  <div class="wrap footer-main">
+    <div class="footer-brand">
+      {% if logos.primary %}
+      <a class="footer-logo" href="/"><img src="/assets/logos/logo-primary.png" alt="{{ site.university }} home" width="522" height="800"></a>
+      {% endif %}
+      <p>{{ site.name }}</p>
+    </div>
+    <nav aria-label="Footer: research">
+      <h2>Research</h2>
+      <ul class="plain-list">
+        <li><a href="/groups/">Research groups</a></li>
+        <li><a href="/people/">People</a></li>
+        <li><a href="/news/">News and events</a></li>
+      </ul>
+    </nav>
+    {% if site.editorUrl or site.contactEmail %}
+    <nav aria-label="Footer: group admins">
+      <h2>Group admins</h2>
+      <ul class="plain-list">
+        {% if site.editorUrl %}<li><a href="{{ site.editorUrl }}">Sign in to edit</a></li>{% endif %}
+        {% if site.contactEmail %}<li><a href="mailto:{{ site.contactEmail }}?subject=Group%20space%20request">Request a group space</a></li>{% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+    <div>
+      <h2>Find us</h2>
+      <p>{% for line in site.address %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
+      {% if site.contactEmail %}<p style="margin-top: 12px"><a href="mailto:{{ site.contactEmail }}">{{ site.contactEmail }}</a></p>{% endif %}
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <div>
+      {% if logos.universityOfLondon %}<img src="/assets/logos/university-of-london-white.svg" alt="A member institution of the University of London">{% endif %}
+      <span>© {{ site.university }}</span>
+    </div>
+    <ul class="plain-list">
+      <li><a href="/privacy/">Privacy</a></li>
+      <li><a href="{{ site.universityUrl }}">{{ site.university }}</a></li>
+    </ul>
+  </div>
+</footer>

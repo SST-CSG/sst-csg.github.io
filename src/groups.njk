@@ -1,0 +1,43 @@
+---
+layout: layouts/base.njk
+title: Research groups
+nav: groups
+permalink: /groups/
+script: directory.js
+description: Every research group in the School of Science & Technology, by department.
+---
+<main id="main" class="wrap page" data-directory>
+  <h1 class="page-title">Research groups</h1>
+  <p class="lead">Each group runs its own space on this site, kept up to date by its group leader. Browse by department or search by topic.</p>
+
+  <div class="filters">
+    <div class="field field--wide">
+      <label for="group-search">Search groups</label>
+      <input id="group-search" type="search" data-search placeholder="Try ‘sensors’ or ‘probability’">
+    </div>
+    <div class="chips" role="group" aria-label="Filter by department">
+      <button type="button" class="chip" data-filter="department" value="All" aria-pressed="true">All departments</button>
+      {% for d in school.departments %}
+      <button type="button" class="chip" data-filter="department" value="{{ d }}" aria-pressed="false">{{ d }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <p class="count" aria-live="polite" data-count="Showing %n %s" data-one="group" data-many="groups">Showing {{ school.groups.length }} groups</p>
+
+  <div class="card-grid card-grid--fill">
+    {% for g in school.groups %}
+    <a class="card card--line" href="{{ g.url }}" data-item data-department="{{ g.department }}" data-text="{{ g.name }} {{ g.summary }} {{ g.lead.name }}">
+      <span class="card__dept"><i aria-hidden="true"></i>{{ g.department }}</span>
+      <span class="card__title">{{ g.name }}</span>
+      <span class="card__text">{{ g.summary }}</span>
+      <span class="card__foot"><span>{{ g.lead.name }}</span><span class="go">Visit group</span></span>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="empty" data-empty hidden>
+    <p>No groups match that search.</p>
+    <p class="muted">Check the spelling, or clear the department filter.</p>
+  </div>
+</main>

@@ -1,0 +1,100 @@
+---
+layout: layouts/base.njk
+nav: home
+permalink: /
+description: Research groups, people and news from the School of Science & Technology at City St George's, University of London.
+---
+{% from "macros.njk" import avatar, squares, event %}
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero__text">
+        <p class="eyebrow">{{ site.name }}</p>
+        <h1 id="hero-title">See what our research groups are working on</h1>
+        <p>Every group in the School has its own space here, kept up to date by the people who run it.</p>
+        <div class="hero__actions">
+          <a class="button" href="/groups/">Explore research groups</a>
+          <a class="button button--outline" href="/people/">Find people</a>
+        </div>
+      </div>
+      <div class="squares" aria-hidden="true">{% for c in "---ooor-oo-o-oo--roo-ro-o-roo-".split("") %}<span{% if c == "o" %} class="on"{% elif c == "r" %} class="ring"{% endif %}></span>{% endfor %}</div>
+    </div>
+  </section>
+
+  <section class="wrap home-section home-section--first" aria-labelledby="dept-title">
+    <div class="section-head">
+      <h2 class="section-title" id="dept-title">Our departments</h2>
+      <a href="/groups/">All research groups</a>
+    </div>
+    <div class="dept-grid">
+      {% for d in site.departments %}
+      <a class="dept" href="/groups/?department={{ d.name | urlencode }}">
+        <span class="dept__mark" aria-hidden="true"></span>
+        <span class="dept__name">{{ d.name }}</span>
+        <span class="dept__text">{{ d.text }}</span>
+        <span class="dept__more">View groups</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if school.featuredGroups.length %}
+  <section class="wrap home-section" aria-labelledby="featured-title">
+    <div class="section-head"><h2 class="section-title" id="featured-title">Featured research groups</h2></div>
+    <div class="card-grid">
+      {% for g in school.featuredGroups %}
+      <a class="card card--grey" href="{{ g.url }}">
+        <span class="card__dept">{{ g.department }}</span>
+        <span class="card__title">{{ g.name }}</span>
+        <span class="card__text">{{ g.summary }}</span>
+        {% if g.lead %}<span class="card__foot" style="justify-content: flex-start">{{ avatar({ initials: g.lead.initials }) }}Led by {{ g.lead.name }}</span>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if school.news.length or school.events.length %}
+  <section class="wrap home-section home-section--last">
+    <div class="split">
+      {% if school.news.length %}
+      <div class="split__main">
+        <div class="section-head">
+          <h2 class="section-title" id="news-title">Latest news</h2>
+          <a href="/news/">All news</a>
+        </div>
+        <div class="news-cards">
+          {% for n in school.news.slice(0, 2) %}
+          <article class="news-card">
+            {{ squares(n.title | tiles(24)) }}
+            <span class="meta">{{ n.date | longDate }} · {{ n.source }}</span>
+            <h3><a href="{{ n.url }}">{{ n.title }}</a></h3>
+            <p>{{ n.summary }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if school.events.length %}
+      <aside class="split__side" aria-labelledby="events-title">
+        <div class="section-head"><h2 class="section-title" id="events-title">Upcoming events</h2></div>
+        <ul class="plain-list rows">
+          {% for e in school.events.slice(0, 4) %}{{ event(e) }}{% endfor %}
+        </ul>
+        <p><a href="/news/" style="font-weight: 600">All events</a></p>
+      </aside>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="cta" aria-labelledby="pi-title">
+    <div class="wrap">
+      <div>
+        <h2 id="pi-title">Leading a research group in the School?</h2>
+        <p>Ask the School admin for a group space. You will be able to showcase your group's people and projects, and post updates yourself whenever you like.</p>
+      </div>
+      {% if site.editorUrl %}<a class="button button--dark" href="{{ site.editorUrl }}">Sign in to edit</a>{% endif %}
+    </div>
+  </section>
+</main>
