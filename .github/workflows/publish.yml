@@ -34,20 +34,39 @@ jobs:
 
       - name: Get read access to the group repositories
         id: builder
+        continue-on-error: true
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.BUILDER_APP_ID }}
           private-key: ${{ secrets.BUILDER_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
+      # If the builder cannot sign in, a push or a manual run fails straight away.
+      # Timed runs report it once a day, so nobody gets an email every ten minutes.
+      - name: Stop if the builder could not sign in
+        id: access
+        run: |
+          if [ "${{ steps.builder.outcome }}" = "success" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::error::The site builder App could not sign in. Check that it is installed on the organisation for all repositories, and that BUILDER_APP_ID and BUILDER_APP_PRIVATE_KEY are correct. See the README."
+          echo "ok=false" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            if [ "$(date -u +%H)" != "08" ] || [ "$(date -u +%M)" -ge 14 ]; then exit 0; fi
+          fi
+          exit 1
+
       - name: Look for changes
         id: look
+        if: steps.access.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ steps.builder.outputs.token }}
         run: node scripts/fetch-groups.mjs fingerprint
 
       - name: Compare with the published site
         id: compare
+        if: steps.access.outputs.ok == 'true'
         env:
           FINGERPRINT: ${{ steps.look.outputs.fingerprint }}
         run: |
