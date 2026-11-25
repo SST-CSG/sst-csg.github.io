@@ -38,10 +38,13 @@ for (let page = 1; ; page++) {
 
 const groups = [];
 for (const repo of repositories.sort((a, b) => a.name.localeCompare(b.name))) {
-  if (!repo.name.startsWith("group-") || repo.name === "group-template" || repo.is_template || repo.archived) continue;
+  // Capital letters in a repository name are accepted and lowered for the web address.
+  const name = repo.name.toLowerCase();
+  const slug = name.slice("group-".length).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  if (!name.startsWith("group-") || name === "group-template" || repo.is_template || repo.archived || !slug) continue;
   const response = await api(`/repos/${owner}/${repo.name}/commits/${repo.default_branch}`, "application/vnd.github.sha");
   if (!response.ok) continue; // an empty repository has nothing to publish yet
-  groups.push({ repo: repo.name, slug: repo.name.slice("group-".length), version: (await response.text()).trim() });
+  groups.push({ repo: repo.name, slug, version: (await response.text()).trim() });
 }
 
 // The fingerprint also changes once a day, so past events drop off the site.
