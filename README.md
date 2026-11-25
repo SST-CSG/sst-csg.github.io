@@ -1,44 +1,36 @@
 # School of Science & Technology research site
 
-The public site for the research groups of the School of Science & Technology, City St George's, University of London. It is a static site built with [Eleventy](https://www.11ty.dev) and published with GitHub Pages at https://sst-csg.github.io.
-
-The site is in preview while content is added, and a notice at the top of every page says so.
+The public site for the research groups of the School of Science & Technology, City St George's, University of London, published at https://sst-csg.github.io.
 
 ## How it fits together
 
-| Folder | What it holds |
+- **This repository** holds the design of the site (page templates, styles, logos) and the School-wide content: departments, School news and events.
+- **Each research group has its own private repository**, named `group-<name>`. It holds the group page, its people, projects and posts. Only people added to that repository can edit that group.
+- **The site is rebuilt automatically.** Every ten minutes it checks whether any group changed something, and republishes if so. A change usually appears within 15 minutes.
+- **People edit through forms** in the editor (Pages CMS), signing in with their GitHub account. Nobody needs to edit files.
+
+| Where | What it holds |
 |---|---|
-| `content/` | The words: groups, people, projects, posts, School news and events. One Markdown file each. |
+| `content/school/` | Departments, School news and events. |
 | `src/` | The page templates, styles and logos. |
-| `src/_data/school.js` | Reads `content/` and prepares the lists the pages use. |
+| `src/_data/school.js` | Reads the content and prepares the lists the pages use. |
 | `src/_data/site.json` | Site-wide settings: contact email, link to the editor, the preview switch. |
-| `.github/workflows/publish.yml` | Builds and publishes the site whenever `main` changes. |
+| `scripts/fetch-groups.mjs` | Finds the group repositories and downloads their content for the build. |
+| `.github/workflows/publish.yml` | Builds and publishes the site. |
+| `.pages.yml` | The editor forms for the School-wide content. |
 
-Each research group has a folder under `content/groups/`:
+## Adding a research group
 
-```
-content/groups/fluid-mechanics-group/
-  group.md        the group page
-  people/         one file per person
-  projects/       one file per project
-  posts/          one file per post
-```
+1. Open the `group-template` repository, press "Use this template", then "Create a new repository". Owner: SST-CSG. Name: `group-` followed by the group's name in lowercase with hyphens, for example `group-applied-probability`. Visibility: Private.
+2. In the new repository, open Settings, then Collaborators and teams, and add the group's PI with the Admin role.
 
-A person's `role` decides where they appear on the group's People page: `Group leader`, `Researcher`, `PhD student`, `Visiting researcher` or `Alumni`. A post with `share_with_school: true` also appears in the School's news.
+The part of the name after `group-` becomes the web address of the group. The group stays hidden from the site until its PI switches off "Hide this group from the site" in the Group page form.
 
-## Adding and editing content
+## How publishing reads the private group repositories
 
-Until the editor is connected, content is changed by editing files, either on github.com (open a file, press the pencil, then "Commit changes") or by asking Claude. Every change to `main` is published about a minute later.
+A GitHub App called `sst-csg-site-builder`, owned by the organisation, has read-only access to all repositories. Its App ID is stored in this repository as the variable `BUILDER_APP_ID` and its private key as the secret `BUILDER_APP_PRIVATE_KEY`. If the key is ever lost or exposed, an organisation owner generates a new one in the App's settings and replaces the secret. Nothing else depends on it.
 
-- **Add a research group:** create `content/groups/<group-name>/group.md` from `content/_templates/group.md`.
-- **Add a person:** create `content/groups/<group-name>/people/<firstname-lastname>.md` from `content/_templates/person.md`.
-- **Edit a group or a profile:** edit its file.
-- **Add or edit a department:** edit the `departments` list in `src/_data/site.json`. A group's `department` must match one of these names exactly.
-- **Remove something:** delete its file.
-
-Folder and file names become web addresses, so use lowercase letters and hyphens.
-
-## Working on the site
+## Working on the site design
 
 You need Node.js 22 or later.
 
@@ -47,7 +39,7 @@ npm install
 npm start
 ```
 
-This serves the site at http://localhost:8080 and rebuilds when a file changes. `npm run build` writes the finished site to `_site/`.
+This serves the site at http://localhost:8080. Group content is not stored in this repository, so a local copy shows no groups unless you place a group's files in `content/groups/<name>/`.
 
 ## Rules to keep
 
@@ -59,6 +51,5 @@ This serves the site at http://localhost:8080 and rebuilds when a file changes. 
 
 - Fill in `contactEmail` and `universityPrivacyUrl` in `src/_data/site.json`.
 - Add an accessibility statement.
-- Add the remaining groups and people, then set `preview` to `false` in `src/_data/site.json`.
 - Connect the editor (Pages CMS) and set `editorUrl`, which switches on the "Sign in to edit" links.
-- Photos for people and posts arrive with the editor.
+- Add the remaining groups and people, then set `preview` to `false` in `src/_data/site.json`.

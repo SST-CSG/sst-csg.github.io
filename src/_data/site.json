@@ -9,11 +9,5 @@
   ],
   "contactEmail": "",
   "editorUrl": "",
-  "preview": true,
-  "departments": [
-    {
-      "name": "Engineering",
-      "text": "Research groups in the Department of Engineering."
-    }
-  ]
+  "preview": true
 }

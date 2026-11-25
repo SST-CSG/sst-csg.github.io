@@ -1,14 +1,22 @@
-# Builds the site and publishes it to GitHub Pages whenever main changes.
-# One-off set-up: in the repository's Settings, open Pages and set Source to "GitHub Actions".
+# Builds the site and publishes it to GitHub Pages.
+#
+# It runs when this repository changes, and every ten minutes to see whether any
+# research group has changed its content. If nothing changed, it stops early.
+#
+# One-off set-up (done): Settings > Pages > Source is "GitHub Actions"; the
+# variable BUILDER_APP_ID and the secret BUILDER_APP_PRIVATE_KEY belong to the
+# read-only "site builder" GitHub App, which is installed on all repositories.
 name: Publish site
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "3-59/10 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -19,20 +27,82 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Get read access to the group repositories
+        id: builder
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.BUILDER_APP_ID }}
+          private-key: ${{ secrets.BUILDER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Look for changes
+        id: look
+        env:
+          GH_TOKEN: ${{ steps.builder.outputs.token }}
+        run: node scripts/fetch-groups.mjs fingerprint
+
+      - name: Compare with the published site
+        id: compare
+        env:
+          FINGERPRINT: ${{ steps.look.outputs.fingerprint }}
+        run: |
+          published=$(curl -fsS "https://${GITHUB_REPOSITORY#*/}/build.json?t=$(date +%s)" | sed -n 's/.*"fingerprint": *"\([a-f0-9]*\)".*/\1/p' || true)
+          if [ "$GITHUB_EVENT_NAME" != "schedule" ] || [ "$published" != "$FINGERPRINT" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nothing has changed since the last publication."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download the group content
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.builder.outputs.token }}
+        run: node scripts/fetch-groups.mjs fetch
+
       - uses: actions/setup-node@v4
+        if: steps.compare.outputs.changed == 'true'
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run build
+
+      - name: Build
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          FINGERPRINT: ${{ steps.look.outputs.fingerprint }}
+        run: |
+          npm ci
+          npm run build
+          echo "{\"fingerprint\": \"$FINGERPRINT\"}" > _site/build.json
+
       - uses: actions/upload-pages-artifact@v3
+        if: steps.compare.outputs.changed == 'true'
         with:
           path: _site
 
+      # GitHub switches off timed runs in a repository that has had no commits
+      # for 60 days. This makes a small commit when the last one is 40 days old.
+      - name: Keep the timed run active
+        if: github.event_name == 'schedule'
+        run: |
+          last=$(git log -1 --format=%ct)
+          if [ $(( $(date +%s) - last )) -gt $(( 40 * 86400 )) ]; then
+            date -u +"%Y-%m-%d" > .github/keepalive
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/keepalive
+            git commit -m "Keep the timed publishing run active"
+            git push
+          fi
+
   deploy:
     needs: build
+    if: needs.build.outputs.changed == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

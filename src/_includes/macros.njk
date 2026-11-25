@@ -1,7 +1,7 @@
 {# Small pieces shared by several pages. #}
 
-{# A person's picture. Until photos are added it shows their initials. #}
-{% macro avatar(person) %}<span class="avatar{% if person.lead %} avatar--lead{% endif %}" aria-hidden="true">{{ person.initials }}</span>{% endmacro %}
+{# A person's picture. Without a photo it shows their initials. #}
+{% macro avatar(person) %}<span class="avatar{% if person.lead and not person.photo %} avatar--lead{% endif %}" aria-hidden="true">{% if person.photo %}<img src="{{ person.photo }}" alt="" loading="lazy">{% else %}{{ person.initials }}{% endif %}</span>{% endmacro %}
 
 {# A decorative block of squares. `cells` is a list of true/false values. #}
 {% macro squares(cells) %}<div class="squares" aria-hidden="true">{% for on in cells %}<span{% if on %} class="on"{% endif %}></span>{% endfor %}</div>{% endmacro %}

@@ -1,3 +1,5 @@
 _site/
 node_modules/
 .DS_Store
+# Group content is downloaded from the group repositories when the site is built.
+content/groups/

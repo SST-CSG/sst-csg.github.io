@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { EleventyHtmlBasePlugin } from "@11ty/eleventy";
 
 // Self-hosted fonts: only the files the site uses are copied from the npm packages.
@@ -21,6 +22,14 @@ export default function (eleventyConfig) {
         eleventyConfig.addPassthroughCopy({
           [`node_modules/@fontsource/${family}/files/${file}`]: `assets/fonts/${file}`
         });
+      }
+    }
+  }
+  // Each group's uploaded photos are published under /media/<group>/.
+  if (fs.existsSync("content/groups")) {
+    for (const group of fs.readdirSync("content/groups")) {
+      if (fs.existsSync(`content/groups/${group}/media`)) {
+        eleventyConfig.addPassthroughCopy({ [`content/groups/${group}/media`]: `media/${group}` });
       }
     }
   }

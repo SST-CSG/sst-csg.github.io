@@ -21,13 +21,14 @@ description: Research groups, people and news from the School of Science & Techn
     </div>
   </section>
 
+  {% if school.departmentList.length %}
   <section class="wrap home-section home-section--first" aria-labelledby="dept-title">
     <div class="section-head">
       <h2 class="section-title" id="dept-title">Our departments</h2>
       <a href="/groups/">All research groups</a>
     </div>
     <div class="dept-grid">
-      {% for d in site.departments %}
+      {% for d in school.departmentList %}
       <a class="dept" href="/groups/?department={{ d.name | urlencode }}">
         <span class="dept__mark" aria-hidden="true"></span>
         <span class="dept__name">{{ d.name }}</span>
@@ -37,10 +38,11 @@ description: Research groups, people and news from the School of Science & Techn
       {% endfor %}
     </div>
   </section>
+  {% endif %}
 
   {% if school.featuredGroups.length %}
   <section class="wrap home-section" aria-labelledby="featured-title">
-    <div class="section-head"><h2 class="section-title" id="featured-title">Featured research groups</h2></div>
+    <div class="section-head"><h2 class="section-title" id="featured-title">Research groups</h2></div>
     <div class="card-grid">
       {% for g in school.featuredGroups %}
       <a class="card card--grey" href="{{ g.url }}">

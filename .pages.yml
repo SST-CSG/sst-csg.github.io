@@ -1,0 +1,90 @@
+# The forms of the School admin's editor (Pages CMS) for School-wide content.
+# Research groups have their own forms, in their own repositories.
+
+content:
+  - name: departments
+    label: Departments
+    type: collection
+    path: content/school/departments
+    filename: "{primary}.md"
+    view:
+      fields: [name, order]
+      primary: name
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: name
+        label: Department name
+        type: string
+        required: true
+        description: Groups choose their department from a list. Tell the site's maintainer when a department is added or renamed, so the list in the group forms can be updated.
+      - name: text
+        label: One-line description
+        type: string
+      - name: order
+        label: Position on the home page
+        type: number
+        description: Lower numbers come first.
+
+  - name: news
+    label: School news
+    type: collection
+    path: content/school/news
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: summary
+        label: One-line summary
+        type: text
+      - name: body
+        label: Text
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+
+  - name: events
+    label: School events
+    type: collection
+    path: content/school/events
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      default:
+        sort: date
+        order: asc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+        description: The event disappears from the site the day after this date.
+      - name: time
+        label: Time
+        type: string
+        description: For example "14:00".
+      - name: location
+        label: Where
+        type: string
+
+settings:
+  hide: true
