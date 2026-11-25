@@ -17,28 +17,25 @@ All content stays in the GitHub repositories. If the editor is ever lost, nothin
 
 ## First set-up
 
-Have ready: an organisation owner at a computer with Node.js 22 or later, and the School admin signed in to GitHub.
+Have ready: an organisation owner at a computer with Node.js 18 or later, and the School admin signed in to GitHub.
 
 1. **Fork the code.** On github.com open `pages-cms/pages-cms`, press "Fork", and choose SST-CSG as owner. Keep the name `pages-cms`.
 2. **Create the database.** The School admin signs up at neon.com with "Continue with GitHub", creates a project named `sst-editor` in a Europe region, and copies the connection string (it starts with `postgresql://`).
 3. **Create the Netlify project.** The School admin signs up at netlify.com with GitHub, chooses "Import an existing project", picks GitHub and the repository `SST-CSG/pages-cms`, and sets the project name to `sst-csg-editor`. The editor's address is then `https://sst-csg-editor.netlify.app`. The first deployment will fail because the settings are still missing. That is expected.
-4. **Create the editor's GitHub App.** The organisation owner downloads the fork and runs the helper that comes with it:
+4. **Create the editor's GitHub App.** The organisation owner, signed in to GitHub in their browser, downloads the helper that comes with the editor and runs it in an empty working folder:
    ```
-   git clone https://github.com/SST-CSG/pages-cms.git
-   cd pages-cms
-   npm install
-   npm run setup:github-app -- --owner-type org --org SST-CSG --app-name "SST CSG editor" --base-url https://sst-csg-editor.netlify.app --env .env.production
+   curl -fsSLO https://raw.githubusercontent.com/SST-CSG/pages-cms/main/scripts/setup-github-app.mjs
+   node setup-github-app.mjs --owner-type org --org SST-CSG --app-name "SST CSG editor" --base-url https://sst-csg-editor.netlify.app --env editor.env
    ```
-   A browser page opens. Press "Create GitHub App". The helper writes the App's six settings into the file `.env.production`.
+   A browser page opens. Press "Create GitHub App". The helper writes the App's settings into the file `editor.env`. Then add the remaining three settings to the same file, one per line:
+   - `DATABASE_URL=` followed by the Neon connection string from step 2.
+   - `CRYPTO_KEY=` followed by the output of `openssl rand -base64 32`.
+   - `ADMIN_EMAILS=` followed by the email address of the School admin's GitHub account.
 5. **Switch off token expiry.** In the organisation's Settings, under Developer settings and GitHub Apps, open the new App. Under "Optional features", opt out of "User-to-server token expiration" if it is offered. Otherwise editors are signed out every few hours.
 6. **Install the App.** In the App's settings press "Install App", choose SST-CSG and "All repositories", so every new group repository is covered.
-7. **Enter the settings in Netlify.** In the Netlify project, under "Environment variables", add:
-   - `DATABASE_URL`: the Neon connection string from step 2.
-   - `CRYPTO_KEY`: the output of `openssl rand -base64 32`.
-   - `ADMIN_EMAILS`: the email address of the School admin's GitHub account.
-   - `BASE_URL`, `BETTER_AUTH_SECRET`, `GITHUB_APP_ID`, `GITHUB_APP_NAME`, `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_WEBHOOK_SECRET` and `GITHUB_APP_PRIVATE_KEY`: copy each value from `.env.production`. For the private key, turn every `\n` into a real line break.
+7. **Enter the settings in Netlify.** In the Netlify project open "Project configuration", then "Environment variables". Press "Add a variable", choose "Import from a .env file" and paste the whole contents of `editor.env`. Eleven variables should appear. Open `GITHUB_APP_PRIVATE_KEY` and check that its value starts with `-----BEGIN`, with no quotation mark before it.
 8. **Deploy.** In Netlify press "Trigger deploy". When it finishes, open `https://sst-csg-editor.netlify.app` and sign in with GitHub.
-9. **Delete the downloaded folder**, including `.env.production`. The values now live in Netlify only.
+9. **Delete the working folder**, including `editor.env`. The values now live in Netlify only.
 10. **Link the site to the editor.** Set `editorUrl` in `src/_data/site.json` of the site repository to the editor's address. The "Sign in to edit" links then appear on the site.
 
 ## Keeping it running
